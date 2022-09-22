@@ -17,8 +17,12 @@ export default class Message {
     }
 
     remove() {
-        const doc = document.body.querySelector('.message')
-        doc.remove()
+        this.$wrapper.classList.add('message-hide')
+
+        setTimeout(() => {
+            const doc = document.body.querySelector('.message')
+            doc.remove()
+        }, 1000)
     }
     getHtml() {
         return this.$wrapper
