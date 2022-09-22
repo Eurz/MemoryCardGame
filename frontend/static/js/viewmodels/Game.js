@@ -30,7 +30,12 @@ export default class Game extends AbstractView {
         this.isMatching = false
         this.updateScore()
 
+        this.$timeBar = this.$wrapper.querySelector('.bar')
+        this.$timeBar.classList.add('start')
+        this.$timeBar.style.animationDuration = `${this.defaultTime}s`
+
         this.$cardsWrapper.innerHTML = ''
+
         this.cards = this.cardsName.map((name, index) => {
             const card = new CardGame(name)
             const template = card.getHtml()
@@ -40,7 +45,12 @@ export default class Game extends AbstractView {
                 this.onHandleClick(card)
             })
 
+            setTimeout(() => {
+                template.classList.add('show')
+            }, 200 * index)
+
             this.$cardsWrapper.appendChild(card.$wrapper)
+
             return card
         })
     }
@@ -73,6 +83,10 @@ export default class Game extends AbstractView {
             }
 
             if (this.score === this.maxCards) {
+                this.isMatching = true
+                this.cards.forEach((card) => {
+                    card.$wrapper.className = 'card hide'
+                })
                 currentMessage = 'You win!'
             }
 
@@ -83,7 +97,13 @@ export default class Game extends AbstractView {
 
             const message = new Message(currentMessage)
             message.$wrapper.appendChild(button)
-            this.$cardsWrapper.appendChild(message.getHtml())
+
+            button.addEventListener('click', () => {
+                message.remove()
+            })
+            const cardsContainer = document.querySelector('.cards-wrapper')
+
+            cardsContainer.appendChild(message.getHtml())
         }
     }
 
@@ -180,27 +200,27 @@ export default class Game extends AbstractView {
     createLayout() {
         const html = `
                 <div class="game-wrapper">
-                 <div class="timer">
-                    <div class="time-left">90s</div>
-                    <div class="timebar">
-                        <div class="bar"></div>
+                    <div class="timer">
+                        <div class="timebar">
+                            <div class="bar"></div>
+                        </div>
+                    </div>
+                    <div class="cards-wrapper">
+                        <div class="cards">
+                        </div>
+                    </div>
+                    <div class="score">
+                        <div class="strokes">
+                            <div class="label"><i class="fa-solid fa-heart-pulse"></i>Strokes</div>
+                            <div class="score-counter"><span class="min">${this.strokes}</span>/${this.maxStrokes}</div>
+                        </div>
+                        <div class="guessed">
+                            <div class="label"><i class="fa-solid fa-flag-checkered"></i>Guessed</div>
+                            <div class="score-counter"><span class="min">${this.score}</span>/${this.maxCards}</div>
+                        </div>
                     </div>
                 </div>
-                <div class="cards">
-                </div>
-
-                <div class="score">
-                    <div class="strokes">
-                        <div class="label"><i class="fa-solid fa-heart-pulse"></i>Strokes</div>
-                        <div class="score-counter"><span class="min">${this.strokes}</span>/${this.maxStrokes}</div>
-                    </div>
-                    <div class="guessed">
-                        <div class="label"><i class="fa-solid fa-flag-checkered"></i>Guessed</div>
-                        <div class="score-counter"><span class="min">${this.score}</span>/${this.maxCards}</div>
-                    </div>
-                </div>
-            </div>
-             `
+                `
 
         return utilities.createFragment(html)
     }

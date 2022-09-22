@@ -16,6 +16,10 @@ export default class Message {
         return utilities.createFragment(html)
     }
 
+    remove() {
+        const doc = document.body.querySelector('.message')
+        doc.remove()
+    }
     getHtml() {
         return this.$wrapper
     }
