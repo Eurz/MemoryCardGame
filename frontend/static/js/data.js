@@ -17,7 +17,7 @@ export function getCards(nbCards = 8) {
     ]
 
     let data = utilities.shuffleArray(cards).splice(0, nbCards)
-    data = data.concat(utilities.shuffleArray([...data]))
+    data = data.concat([...data])
 
-    return data
+    return utilities.shuffleArray(data)
 }
