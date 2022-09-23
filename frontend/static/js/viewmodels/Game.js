@@ -8,9 +8,9 @@ import AbstractView from './AbstractView.js'
 export default class Game extends AbstractView {
     constructor() {
         super()
-        this.cardsName = getCards()
+        this.cardsName = []
         this.maxStrokes = 10
-        this.maxCards = this.cardsName.length / 2
+        this.maxCards = 8
         this.strokes = 0
         this.score = 0
         this.timeMax = 60
@@ -27,7 +27,10 @@ export default class Game extends AbstractView {
     /**
      * Init a new game
      */
-    createGame = () => {
+    createGame = async () => {
+        const data = await getCards()
+        this.cardsName = data
+        this.cardsName.length / 2
         this.score = 0
         this.strokes = 0
         this.isMatching = false
@@ -48,6 +51,8 @@ export default class Game extends AbstractView {
             this.counter--
             timeLeft.textContent = `${this.counter}s`
             if (this.counter === 0) {
+                clearInterval(this.timer)
+
                 this.checkScore()
             }
         }, 1000)
@@ -98,6 +103,9 @@ export default class Game extends AbstractView {
     checkScore() {
         let currentMessage
 
+        if (this.score === this.maxCards - 1) {
+            this.playSound('finishim')
+        }
         if (
             this.strokes >= this.maxStrokes ||
             this.score === this.maxCards ||
@@ -111,13 +119,13 @@ export default class Game extends AbstractView {
             if (this.strokes >= this.maxStrokes || this.counter === 0) {
                 clearInterval(this.timer)
                 this.playSound('neverwin')
-
                 currentMessage = 'You lose!'
             }
 
             if (this.score === this.maxCards) {
                 this.playSound('victory')
                 currentMessage = 'You win!'
+                console.log('victory')
             }
 
             this.isMatching = true

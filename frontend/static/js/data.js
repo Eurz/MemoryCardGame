@@ -1,6 +1,6 @@
 import utilities from './functions/utilities.js'
 
-export function getCards(nbCards = 8) {
+export async function getCards(nbCards = 8) {
     const cards = [
         'noob',
         'liukang',
