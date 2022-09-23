@@ -9,11 +9,11 @@ export default class Game extends AbstractView {
     constructor() {
         super()
         this.cardsName = getCards()
-        this.maxStrokes = 2
+        this.maxStrokes = 10
         this.maxCards = this.cardsName.length / 2
         this.strokes = 0
         this.score = 0
-        this.timeMax = 10
+        this.timeMax = 60
         this.counter = this.timeMax
         this.timer = null
         this.$wrapper = this.createLayout()
@@ -110,11 +110,13 @@ export default class Game extends AbstractView {
 
             if (this.strokes >= this.maxStrokes || this.counter === 0) {
                 clearInterval(this.timer)
+                this.playSound('neverwin')
 
                 currentMessage = 'You lose!'
             }
 
             if (this.score === this.maxCards) {
+                this.playSound('victory')
                 currentMessage = 'You win!'
             }
 
