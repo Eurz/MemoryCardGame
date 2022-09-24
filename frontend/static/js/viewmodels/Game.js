@@ -3,6 +3,7 @@ import { soundsPack } from '../functions/sounds.js'
 import utilities from '../functions/utilities.js'
 import Sounds from '../libs/Sounds.js'
 import CardGame from '../views/CardGame.js'
+import ChooseDifficulty from '../views/ChooseDifficulty.js'
 import Message from '../views/Message.js'
 import AbstractView from './AbstractView.js'
 
@@ -24,9 +25,36 @@ export default class Game extends AbstractView {
 
         this.soundsList = soundsPack(getSoundsList())
         this.music = this.playSound('music', { loop: true, volume: 0.5 })
-        this.createGame()
+        this.chooseDifficulty()
     }
 
+    chooseDifficulty = () => {
+        const data = localStorage.getItem('mkgame')
+
+        if (!data) {
+            console.log('Pas de données')
+            this.$cardsWrapper.innerHTML = ''
+
+            const currentMessage = `<h2>Choose your destiny</h2>`
+            const message = new Message(currentMessage)
+
+            const chooseDifficulty = new ChooseDifficulty()
+            const buttonStart = chooseDifficulty.$buttonStart
+            buttonStart.addEventListener('click', this.createGame)
+
+            message.$wrapper.appendChild(chooseDifficulty.getHtml())
+
+            buttonStart.addEventListener('click', () => {
+                message.remove()
+            })
+
+            this.$wrapper
+                .querySelector('.cards-wrapper')
+                .append(message.getHtml())
+        } else {
+            this.createGame()
+        }
+    }
     /**
      * Init a new game
      */
@@ -63,7 +91,7 @@ export default class Game extends AbstractView {
             }
         }, 1000)
 
-        this.$cardsWrapper.innerHTML = ''
+        // this.$cardsWrapper.innerHTML = ''
 
         this.cards = this.cardsName.map((name, index) => {
             const card = new CardGame(name)
@@ -113,6 +141,7 @@ export default class Game extends AbstractView {
             this.score === this.maxCards ||
             this.counter === 0
         ) {
+            localStorage.removeItem('mkgame')
             this.$timeBar.style.animationPlayState = 'paused'
             const barWidth = this.$timeBar.offsetWidth
             this.$timeBar.style.width = `${barWidth}px`
@@ -143,7 +172,7 @@ export default class Game extends AbstractView {
             const button = document.createElement('button')
             button.textContent = 'New Game'
             button.classList.add('btn')
-            button.addEventListener('click', this.createGame)
+            button.addEventListener('click', this.chooseDifficulty)
 
             const message = new Message(currentMessage)
             message.$wrapper.appendChild(button)

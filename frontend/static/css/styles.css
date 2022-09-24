@@ -81,6 +81,7 @@ h2 {
     justify-content: center;
     align-items: center;
     gap: 20px;
+    height: 100%;
 }
 .game-container {
     grid-template-rows: auto 1fr;
@@ -114,6 +115,7 @@ h2 {
     background-color: var(--bg-link);
     border: none;
     color: #fff;
+    transition: all 0.5s;
     /* font-weight: bold; */
 }
 .btn:hover {
@@ -130,6 +132,10 @@ h2 {
 }
 .btn-groups .btn {
     display: inline-block;
+}
+
+.btn-hide {
+    opacity: 0;
 }
 /* GAME */
 .game-wrapper {
@@ -358,13 +364,14 @@ h2 {
     background-color: var(--main-title-color);
 }
 .message {
-    background-color: #d41a08;
+    /* background-color: #d41a08; */
+    /* background-image: url('../assets/stage02.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: multiply; */
+
     height: 100%;
     width: 100%;
-    /* top: -150px;
-    left: -125px;
-    margin-top: 50%;
-    margin-left: 50%; */
     position: absolute;
     display: flex;
     flex-direction: column;
