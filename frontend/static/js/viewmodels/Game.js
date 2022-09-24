@@ -24,7 +24,6 @@ export default class Game extends AbstractView {
         this.isMatching = false
 
         this.soundsList = soundsPack(getSoundsList())
-        this.music = this.playSound('music', { loop: true, volume: 0.5 })
         this.chooseDifficulty()
     }
 
@@ -38,9 +37,9 @@ export default class Game extends AbstractView {
             const currentMessage = `<h2>Choose your destiny</h2>`
             const message = new Message(currentMessage)
 
-            const chooseDifficulty = new ChooseDifficulty()
+            const chooseDifficulty = new ChooseDifficulty(this.createGame)
             const buttonStart = chooseDifficulty.$buttonStart
-            buttonStart.addEventListener('click', this.createGame)
+            // buttonStart.addEventListener('click', this.createGame)
 
             message.$wrapper.appendChild(chooseDifficulty.getHtml())
 
@@ -52,14 +51,24 @@ export default class Game extends AbstractView {
                 .querySelector('.cards-wrapper')
                 .append(message.getHtml())
         } else {
-            this.createGame()
+            this.createGame(JSON.parse(data))
         }
     }
     /**
      * Init a new game
      */
-    createGame = async () => {
+    createGame = async (gameParams) => {
+        console.log('Params vaut', gameParams)
+        this.music = this.playSound('music', { loop: true, volume: 0.5 })
+
+        this.maxStrokes = gameParams.maxStrokes
+        this.timeMax = gameParams.maxTime
+        console.log('Maxstrokes', this.maxStrokes)
+        console.log('Timemax', this.timeMax)
+        const strokes = this.$wrapper.querySelector('.strokes .max')
+        strokes.textContent = this.maxStrokes
         const data = await getCards()
+
         this.cardsName = data
         this.cardsName.length / 2
         this.score = 0
@@ -310,7 +319,7 @@ export default class Game extends AbstractView {
                     <div class="score">
                         <div class="strokes">
                             <div class="label"><i class="fa-solid fa-heart-pulse"></i>Strokes</div>
-                            <div class="score-counter"><span class="min">${this.strokes}</span>/${this.maxStrokes}</div>
+                            <div class="score-counter"><span class="min">${this.strokes}</span>/<span class="max">${this.maxStrokes}</span></div>
                         </div>
                         <div class="guessed">
                             <div class="label"><i class="fa-solid fa-flag-checkered"></i>Guessed</div>

@@ -137,6 +137,11 @@ h2 {
 .btn-hide {
     opacity: 0;
 }
+
+.btn-fadeout {
+    transform: scale(1.4);
+    opacity: 0;
+}
 /* GAME */
 .game-wrapper {
     text-align: center;
