@@ -20,7 +20,16 @@ export default class Game extends AbstractView {
         this.$cardsWrapper = this.$wrapper.querySelector('.cards')
         this.cardOne = this.cardTwo = null
         this.isMatching = false
-
+        this.soundsList = {
+            music: { play: () => this.playSound('music') },
+            victory: { play: () => this.playSound('victory') },
+            tictac: { play: () => this.playSound('tictac') },
+            click: { play: () => this.playSound('click') },
+            outstanding: { play: () => this.playSound('outstanding') },
+            end: { play: () => this.playSound('end') },
+            finishim: { play: () => this.playSound('finishim') },
+        }
+        // this.playSound('music', 'loop')
         this.createGame()
     }
 
@@ -39,12 +48,13 @@ export default class Game extends AbstractView {
 
         this.$timeBar = this.$wrapper.querySelector('.bar')
         this.$timeBar.classList.add('start')
-        // this.$timeBar.style.width = '0px'
         this.$timeBar.style.animationPlayState = 'running'
         this.$timeBar.style.animationDuration = `${this.timeMax}s`
 
-        const timeLeft = this.$wrapper.querySelector('.time-left')
+        const timeLeft = this.$wrapper.querySelector('.time-left span')
         timeLeft.textContent = `${this.timeMax}s`
+        // const tictac = this.playSound('tictacclock')
+
         this.timer = setInterval(() => {
             const barWidth = this.$timeBar.offsetWidth
 
@@ -52,6 +62,7 @@ export default class Game extends AbstractView {
             timeLeft.textContent = `${this.counter}s`
             if (this.counter === 0) {
                 clearInterval(this.timer)
+                // tictac.pause()
 
                 this.checkScore()
             }
@@ -76,13 +87,6 @@ export default class Game extends AbstractView {
 
             return card
         })
-
-        // const test = utilities.createWrapper('button', 'test')
-        // test.textContent = 'test'
-        // test.addEventListener('click', () => {
-
-        // })
-        // this.$cardsWrapper.appendChild(test)
     }
 
     /**
@@ -93,7 +97,8 @@ export default class Game extends AbstractView {
         if (!this.isMatching) {
             this.matchCard(card)
             card.flipCard()
-            this.playSound('click')
+            // this.playSound('click')
+            this.soundsList.click.play()
         }
     }
 
@@ -106,6 +111,7 @@ export default class Game extends AbstractView {
         if (this.score === this.maxCards - 1) {
             this.playSound('finishim')
         }
+
         if (
             this.strokes >= this.maxStrokes ||
             this.score === this.maxCards ||
@@ -117,7 +123,6 @@ export default class Game extends AbstractView {
             this.$timeBar.classList.remove('start')
 
             if (this.strokes >= this.maxStrokes || this.counter === 0) {
-                clearInterval(this.timer)
                 this.playSound('neverwin')
                 currentMessage = 'You lose!'
             }
@@ -128,6 +133,7 @@ export default class Game extends AbstractView {
                 console.log('victory')
             }
 
+            clearInterval(this.timer)
             this.isMatching = true
             this.cards.forEach((card) => {
                 card.$wrapper.className = 'card hide'
@@ -155,7 +161,7 @@ export default class Game extends AbstractView {
      * @param {String} action - Define sound type to play
      */
     playSound(action) {
-        const sounds = new Sounds()
+        const sounds = new Sounds(action)
         sounds.play(action)
 
         const random = Math.floor(Math.random() * 100)
@@ -171,6 +177,7 @@ export default class Game extends AbstractView {
             default:
                 break
         }
+        return sounds
     }
 
     /**
@@ -203,6 +210,7 @@ export default class Game extends AbstractView {
             this.strokes++
             this.cardOne.setWrong()
             this.cardTwo.setWrong()
+            this.playSound('wrong')
             this.updateScore('strokes')
         }, 500)
     }
@@ -244,7 +252,10 @@ export default class Game extends AbstractView {
         const html = `
                 <div class="game-wrapper">
                     <div class="timer">
-                        <div class="time-left"></div>
+                        <div class="time-left">
+                            <i class="fa-solid fa-clock"></i>
+                            <span></span>
+                        </div>
                         <div class="timebar">
                             <div class="bar"></div>
                         </div>
