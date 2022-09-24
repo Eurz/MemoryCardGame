@@ -511,7 +511,7 @@ h2 {
     } */
     .game-wrapper {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr auto;
         gap: 0;
         grid-template-rows: auto 1fr;
     }
