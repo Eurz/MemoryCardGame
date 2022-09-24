@@ -230,8 +230,6 @@ h2 {
     cursor: pointer;
     opacity: 0;
     transition: opacity 1s ease 0s;
-    /* transition-property: opacity; */
-    /* transition-duration: 0.5s; */
 }
 
 .show {
@@ -297,6 +295,7 @@ h2 {
     text-align: center;
     transition: transform 0.5s;
     transform-style: preserve-3d;
+    box-shadow: 0 0 1px #fff;
     pointer-events: none;
 }
 .card-front {
@@ -344,11 +343,18 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    flex: 1;
+    background-image: url('../assets/stage01.webp');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: multiply;
+    background-color: var(--main-title-color);
 }
 .message {
     background-color: #d41a08;
-    height: 250px;
-    width: 300px;
+    height: 100%;
+    width: 100%;
     /* top: -150px;
     left: -125px;
     margin-top: 50%;
@@ -517,6 +523,12 @@ h2 {
         width: calc(var(--cards-width-md) / 4 - 10px);
         height: calc(var(--cards-width-md) / 4 - 10px);
     }
+    .score {
+        background-image: url('../assets/shaokhan.webp');
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        background-size: 40%;
+    }
 }
 
 @media screen and (min-width: 789px) {
@@ -531,13 +543,6 @@ h2 {
 }
 
 @media screen and (min-width: 980px) {
-    .game-wrapper {
-        /* display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 10px;
-        grid-template-rows: auto 1fr; */
-    }
-
     .cards {
         width: var(--cards-width-lg);
     }
