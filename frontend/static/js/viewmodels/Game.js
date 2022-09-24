@@ -1,4 +1,5 @@
-import { getCards } from '../data.js'
+import { getCards, getSoundsList } from '../data.js'
+import { soundsPack } from '../functions/sounds.js'
 import utilities from '../functions/utilities.js'
 import Sounds from '../libs/Sounds.js'
 import CardGame from '../views/CardGame.js'
@@ -20,16 +21,9 @@ export default class Game extends AbstractView {
         this.$cardsWrapper = this.$wrapper.querySelector('.cards')
         this.cardOne = this.cardTwo = null
         this.isMatching = false
-        this.soundsList = {
-            music: { play: () => this.playSound('music') },
-            victory: { play: () => this.playSound('victory') },
-            tictac: { play: () => this.playSound('tictac') },
-            click: { play: () => this.playSound('click') },
-            outstanding: { play: () => this.playSound('outstanding') },
-            end: { play: () => this.playSound('end') },
-            finishim: { play: () => this.playSound('finishim') },
-        }
-        // this.playSound('music', 'loop')
+
+        this.soundsList = soundsPack(getSoundsList())
+        this.music = this.playSound('music', { loop: true, volume: 0.5 })
         this.createGame()
     }
 
@@ -53,7 +47,8 @@ export default class Game extends AbstractView {
 
         const timeLeft = this.$wrapper.querySelector('.time-left span')
         timeLeft.textContent = `${this.timeMax}s`
-        // const tictac = this.playSound('tictacclock')
+        const params = { loop: true, volume: 0.3 }
+        const titac = this.playSound('tictacclock', params)
 
         this.timer = setInterval(() => {
             const barWidth = this.$timeBar.offsetWidth
@@ -62,7 +57,7 @@ export default class Game extends AbstractView {
             timeLeft.textContent = `${this.counter}s`
             if (this.counter === 0) {
                 clearInterval(this.timer)
-                // tictac.pause()
+                this.soundsList['tictacclock'].pause()
 
                 this.checkScore()
             }
@@ -94,11 +89,11 @@ export default class Game extends AbstractView {
      * @param {Object} card - Event when a card is clicked
      */
     onHandleClick = (card) => {
-        if (!this.isMatching) {
+        if (!card.isVisible) {
             this.matchCard(card)
             card.flipCard()
-            // this.playSound('click')
-            this.soundsList.click.play()
+            this.playSound('click')
+            // this.soundsList.click.play()
         }
     }
 
@@ -110,6 +105,7 @@ export default class Game extends AbstractView {
 
         if (this.score === this.maxCards - 1) {
             this.playSound('finishim')
+            // this.soundsList.finishim.play()
         }
 
         if (
@@ -121,14 +117,19 @@ export default class Game extends AbstractView {
             const barWidth = this.$timeBar.offsetWidth
             this.$timeBar.style.width = `${barWidth}px`
             this.$timeBar.classList.remove('start')
+            this.soundsList['tictacclock'].pause()
 
             if (this.strokes >= this.maxStrokes || this.counter === 0) {
                 this.playSound('neverwin')
+                // this.soundsList.neverwin.play()
+
                 currentMessage = 'You lose!'
             }
 
             if (this.score === this.maxCards) {
                 this.playSound('victory')
+                // this.soundsList.victory.play()
+
                 currentMessage = 'You win!'
                 console.log('victory')
             }
@@ -160,24 +161,32 @@ export default class Game extends AbstractView {
      *
      * @param {String} action - Define sound type to play
      */
-    playSound(action) {
-        const sounds = new Sounds(action)
-        sounds.play(action)
-
-        const random = Math.floor(Math.random() * 100)
-        const randomSound = new Sounds()
-
-        switch (random) {
-            case 25:
-                randomSound.play('outstanding')
-                break
-            case 75:
-                randomSound.play('laugh')
-                break
-            default:
-                break
+    playSound(type, params = null) {
+        if (this.soundsList.hasOwnProperty(type)) {
+            const target = this.soundsList[type]
+            if (params) {
+                target.setParams(params)
+            }
+            target.play()
+            return target
         }
-        return sounds
+
+        // const sounds = new Sounds(action)
+        // sounds.play(action)
+
+        // const random = Math.floor(Math.random() * 100)
+        // const randomSound = new Sounds()
+
+        // switch (random) {
+        //     case 25:
+        //         randomSound.play('outstanding')
+        //         break
+        //     case 75:
+        //         randomSound.play('laugh')
+        //         break
+        //     default:
+        //         break
+        // }
     }
 
     /**
@@ -202,7 +211,10 @@ export default class Game extends AbstractView {
                 this.cardOne.setCorrect()
                 this.cardTwo.setCorrect()
                 this.playSound('good')
+
                 this.playSound(this.cardOne.name)
+                // this.soundsList.this.cardTwo.name.play()
+
                 this.updateScore('guessed')
                 return
             }
@@ -211,6 +223,8 @@ export default class Game extends AbstractView {
             this.cardOne.setWrong()
             this.cardTwo.setWrong()
             this.playSound('wrong')
+            // this.soundsList.wrong.play()
+
             this.updateScore('strokes')
         }, 500)
     }
