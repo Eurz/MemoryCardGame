@@ -497,6 +497,12 @@ h2 {
     /* .cards {
         width: var(--cards-width-md);
     } */
+    .game-wrapper {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0;
+        grid-template-rows: auto 1fr;
+    }
 
     .card {
         width: calc(var(--cards-width-md) / 4 - 10px);
@@ -508,12 +514,6 @@ h2 {
     /* .cards {
         width: var(--cards-width-md);
     } */
-    .game-wrapper {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 0;
-        grid-template-rows: auto 1fr;
-    }
 
     .card {
         width: calc(var(--cards-width-md) / 4 - 10px);
