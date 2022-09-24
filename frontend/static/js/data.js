@@ -14,6 +14,8 @@ export async function getCards(nbCards = 8) {
         'fujin',
         'rain',
         'quan-chi',
+        'raiden',
+        'shinnok',
     ]
 
     let data = utilities.shuffleArray(cards).splice(0, nbCards)
