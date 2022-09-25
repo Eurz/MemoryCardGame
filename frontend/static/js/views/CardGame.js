@@ -8,7 +8,7 @@ export default class CardGame {
      */
     constructor(name /*, MatchCardSubject*/) {
         this.name = name
-        this.isVisible = false
+        this.isRevealed = false
         // this._matchCardSubject = MatchCardSubject
 
         this.$wrapper = document.createElement('div')
@@ -23,7 +23,7 @@ export default class CardGame {
     setCorrect() {
         // this.$wrapper.removeEventListener('click', this.flipCard)
         this.$wrapper.classList.add('good')
-        this.isVisible = true
+        this.isRevealed = true
     }
     hide() {
         this.$wrapper.classList.add('hide')

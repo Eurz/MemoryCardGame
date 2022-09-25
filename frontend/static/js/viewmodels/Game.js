@@ -126,11 +126,12 @@ export default class Game extends AbstractView {
      * @param {Object} card - Event when a card is clicked
      */
     onHandleClick = (card) => {
-        if (!card.isVisible) {
-            this.matchCard(card)
-            card.flipCard()
-            this.playSound('click')
-            // this.soundsList.click.play()
+        if (!card.isRevealed || this.isMatching === false) {
+            setTimeout(() => {
+                this.matchCard(card)
+                card.flipCard()
+                this.playSound('click')
+            }, 300)
         }
     }
 
