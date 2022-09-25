@@ -12,15 +12,14 @@ export default class ChooseDifficulty {
             button.addEventListener('click', (e) => {
                 const data = this.setDifficulty(e.target.id)
                 this.setStorage(data)
-                const fadeDelay = 500
+                const fadeDelay = 1000
                 button.style.animationDuration = `${fadeDelay / 100}s`
                 button.classList.add('btn-fadeout')
-                console.log(buttons)
                 const otherButtons = buttons.filter((currentButton) => {
                     return currentButton.id != button.id
                 })
                 otherButtons.forEach((button) => {
-                    button.classList.add('btn-disabled')
+                    button.classList.add('btn-hide')
                 })
 
                 setTimeout(() => {

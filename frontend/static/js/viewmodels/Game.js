@@ -54,7 +54,7 @@ export default class Game extends AbstractView {
      * Init a new game
      */
     createGame = async (gameParams) => {
-        this.music = this.playSound('music', { loop: true, volume: 0.5 })
+        this.music = this.playSound('music1', { loop: true, volume: 0.5 })
 
         this.maxStrokes = gameParams.maxStrokes
         this.timeMax = gameParams.maxTime
@@ -119,6 +119,8 @@ export default class Game extends AbstractView {
      * @param {Object} card - Event when a card is clicked
      */
     onHandleClick = (card) => {
+        this.randomSound()
+
         if (this.isMatching === false) {
             this.matchCard(card)
             card.flipCard()
@@ -202,23 +204,21 @@ export default class Game extends AbstractView {
             target.play()
             return target
         }
+    }
 
-        // const sounds = new Sounds(action)
-        // sounds.play(action)
+    randomSound() {
+        const random = Math.floor(Math.random() * 20)
 
-        // const random = Math.floor(Math.random() * 100)
-        // const randomSound = new Sounds()
-
-        // switch (random) {
-        //     case 25:
-        //         randomSound.play('outstanding')
-        //         break
-        //     case 75:
-        //         randomSound.play('laugh')
-        //         break
-        //     default:
-        //         break
-        // }
+        switch (random) {
+            case 6:
+                this.playSound('outstanding')
+                break
+            case 12:
+                this.playSound('laugh')
+                break
+            default:
+                break
+        }
     }
 
     /**
