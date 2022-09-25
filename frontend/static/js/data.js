@@ -48,6 +48,7 @@ export function getSoundsList() {
         scorpion: 'scorpion.mp3',
         sindel: 'sindel.mp3',
         subzero: 'subzero.mp3',
+        dontclick: 'dontclick.mp3',
     }
     return list
 }

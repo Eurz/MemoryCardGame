@@ -4,26 +4,33 @@ export default class ChooseDifficulty {
     constructor(callBack) {
         this.$wrapper = this.createLayout()
         this.callBack = callBack
-        this.$buttonStart = this.$wrapper.querySelector('.btn-start')
-        const buttons = this.$wrapper.querySelectorAll('.btn-difficulty')
+        const buttons = Array.from(
+            this.$wrapper.querySelectorAll('.btn-difficulty')
+        )
 
         buttons.forEach((button) => {
             button.addEventListener('click', (e) => {
-                this.$buttonStart.classList.remove('btn-hide')
                 const data = this.setDifficulty(e.target.id)
                 this.setStorage(data)
-                console.log(e.target.id)
-                // button.classList.add('btn-fadeout')
-
-                this.$buttonStart.addEventListener('click', () => {
-                    this.callBack(data)
+                const fadeDelay = 500
+                button.style.animationDuration = `${fadeDelay / 100}s`
+                button.classList.add('btn-fadeout')
+                console.log(buttons)
+                const otherButtons = buttons.filter((currentButton) => {
+                    return currentButton.id != button.id
                 })
+                otherButtons.forEach((button) => {
+                    button.classList.add('btn-disabled')
+                })
+
+                setTimeout(() => {
+                    this.callBack(data)
+                }, fadeDelay + 100)
             })
         })
     }
 
     setDifficulty(difficulty) {
-        console.log('typeof', difficulty)
         let gameParams
         switch (difficulty) {
             case 'medium':
@@ -57,9 +64,6 @@ export default class ChooseDifficulty {
                     <button class="btn btn-difficulty" id="easy">Easy</button>
                     <button class="btn btn-difficulty" id="medium">Medium</button>
                     <button class="btn btn-difficulty" id="hard">Hard</button>
-                    </div>
-                    <div>
-                    <button class="btn btn-start btn-hide">Start</button>
                     </div>
             </div>
             `

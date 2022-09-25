@@ -31,21 +31,17 @@ export default class Game extends AbstractView {
         const data = localStorage.getItem('mkgame')
 
         if (!data) {
-            console.log('Pas de données')
             this.$cardsWrapper.innerHTML = ''
 
             const currentMessage = `<h2>Choose your destiny</h2>`
             const message = new Message(currentMessage)
 
-            const chooseDifficulty = new ChooseDifficulty(this.createGame)
-            const buttonStart = chooseDifficulty.$buttonStart
-            // buttonStart.addEventListener('click', this.createGame)
-
-            message.$wrapper.appendChild(chooseDifficulty.getHtml())
-
-            buttonStart.addEventListener('click', () => {
+            const chooseDifficulty = new ChooseDifficulty((data) => {
+                this.createGame(data)
                 message.remove()
             })
+
+            message.$wrapper.appendChild(chooseDifficulty.getHtml())
 
             this.$wrapper
                 .querySelector('.cards-wrapper')
@@ -58,13 +54,10 @@ export default class Game extends AbstractView {
      * Init a new game
      */
     createGame = async (gameParams) => {
-        console.log('Params vaut', gameParams)
         this.music = this.playSound('music', { loop: true, volume: 0.5 })
 
         this.maxStrokes = gameParams.maxStrokes
         this.timeMax = gameParams.maxTime
-        console.log('Maxstrokes', this.maxStrokes)
-        console.log('Timemax', this.timeMax)
         const strokes = this.$wrapper.querySelector('.strokes .max')
         strokes.textContent = this.maxStrokes
         const data = await getCards()
@@ -126,12 +119,13 @@ export default class Game extends AbstractView {
      * @param {Object} card - Event when a card is clicked
      */
     onHandleClick = (card) => {
-        if (!card.isRevealed || this.isMatching === false) {
-            setTimeout(() => {
-                this.matchCard(card)
-                card.flipCard()
-                this.playSound('click')
-            }, 300)
+        if (this.isMatching === false) {
+            this.matchCard(card)
+            card.flipCard()
+
+            card.isRevealed === true
+                ? this.playSound('dontclick')
+                : this.playSound('click')
         }
     }
 
@@ -170,7 +164,6 @@ export default class Game extends AbstractView {
                 // this.soundsList.victory.play()
 
                 currentMessage = 'You win!'
-                console.log('victory')
             }
 
             clearInterval(this.timer)
@@ -265,7 +258,7 @@ export default class Game extends AbstractView {
             // this.soundsList.wrong.play()
 
             this.updateScore('strokes')
-        }, 500)
+        }, 700)
     }
 
     /**
@@ -297,7 +290,6 @@ export default class Game extends AbstractView {
         scoreWrapper.forEach((score) => {
             score.textContent = target.value
         })
-        const result = { strokes: this.strokes, score: this.score }
         this.checkScore()
     }
 
