@@ -16,7 +16,7 @@
     --bg-timebar: #d41a08;
 
     --cards-width-xs: 280px;
-    --cards-width-md: 418px;
+    --cards-width-md: 310px;
     --cards-width-lg: 560px;
     /* --card-width-lg: 70px;  */
 }
@@ -549,7 +549,7 @@ h2 {
     }
 }
 
-@media screen and (min-width: 789px) {
+@media screen and (min-width: 768px) {
     /* .cards {
         width: var(--cards-width-md);
     } */
@@ -560,7 +560,7 @@ h2 {
     }
 }
 
-@media screen and (min-width: 980px) {
+@media screen and (min-width: 992px) {
     .cards {
         width: var(--cards-width-lg);
     }
